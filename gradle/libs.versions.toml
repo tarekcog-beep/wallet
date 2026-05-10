@@ -88,7 +88,7 @@ turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 
 [bundles]
-# Compose UI deps applied via the consultme.android.compose convention plugin.
+# Compose UI deps applied via the walletapp.android.compose convention plugin.
 # `androidx.compose.bom` is intentionally NOT bundled — `platform(...)` can't be wrapped around a bundle.
 androidx-compose = [
     "androidx-compose-ui",

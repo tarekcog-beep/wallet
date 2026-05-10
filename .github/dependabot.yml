@@ -5,10 +5,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-    reviewers:
-      - "Tarek-Bohdima"
-    assignees:
-      - "Tarek-Bohdima"
     commit-message:
       prefix: "chore"
       include: "scope"
@@ -58,10 +54,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
-    reviewers:
-      - "Tarek-Bohdima"
-    assignees:
-      - "Tarek-Bohdima"
     commit-message:
       prefix: "chore"
       include: "scope"

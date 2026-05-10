@@ -27,7 +27,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ConsultMe"
+rootProject.name = "WalletApp"
 include(":app")
 include(":baselineprofile")
 include(":core-common")

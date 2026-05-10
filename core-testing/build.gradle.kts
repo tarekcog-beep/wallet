@@ -1,10 +1,10 @@
 // Copyright 2025 MyCompany
 plugins {
-    id("consultme.android.library")
+    id("walletapp.android.library")
 }
 
 android {
-    namespace = "com.thecompany.consultme.core.testing"
+    namespace = "com.tarek.wallet.core.testing"
 
     // Override the convention default — :core-testing provides HiltTestRunner,
     // so it can't depend on its own runner.

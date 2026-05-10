@@ -1,10 +1,10 @@
 // Copyright 2025 MyCompany
 plugins {
-    id("consultme.android.baselineprofile")
+    id("walletapp.android.baselineprofile")
 }
 
 android {
-    namespace = "com.thecompany.consultme.baselineprofile"
+    namespace = "com.tarek.wallet.baselineprofile"
 
     defaultConfig {
         // Macrobenchmarks require the AndroidX runner.

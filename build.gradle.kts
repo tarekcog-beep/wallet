@@ -11,7 +11,7 @@ plugins {
     alias(libs.plugins.hilt.gradle) apply false
     alias(libs.plugins.spotless) apply false
     // Adds the baselineprofile plugin to the root buildscript classpath so the
-    // `consultme.android.application` and `consultme.android.baselineprofile`
+    // `walletapp.android.application` and `walletapp.android.baselineprofile`
     // convention plugins can apply it.
     alias(libs.plugins.androidx.baselineprofile) apply false
     // Kover applied at root aggregates coverage from every module that also

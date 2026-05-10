@@ -1,10 +1,10 @@
 // Copyright 2025 MyCompany
 plugins {
-    id("consultme.android.feature")
+    id("walletapp.android.feature")
 }
 
 android {
-    namespace = "com.thecompany.consultme.feature.example"
+    namespace = "com.tarek.wallet.feature.example"
 }
 
 dependencies {

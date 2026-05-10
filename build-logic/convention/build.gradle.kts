@@ -3,7 +3,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "com.thecompany.consultme.buildlogic"
+group = "com.tarek.wallet.buildlogic"
 
 kotlin {
     jvmToolchain(17)

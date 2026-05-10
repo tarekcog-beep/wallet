@@ -1,11 +1,11 @@
 // Copyright 2025 MyCompany
 plugins {
-    id("consultme.android.library")
-    id("consultme.android.compose")
+    id("walletapp.android.library")
+    id("walletapp.android.compose")
 }
 
 android {
-    namespace = "com.thecompany.consultme.core.designsystem"
+    namespace = "com.tarek.wallet.core.designsystem"
 }
 
 dependencies {

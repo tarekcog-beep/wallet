@@ -1,16 +1,16 @@
 // Copyright 2025 MyCompany
 plugins {
-    id("consultme.android.application")
-    id("consultme.android.compose")
-    id("consultme.android.hilt")
+    id("walletapp.android.application")
+    id("walletapp.android.compose")
+    id("walletapp.android.hilt")
 }
 
 android {
-    namespace = "com.thecompany.consultme"
+    namespace = "com.tarek.wallet"
 
     defaultConfig {
 
-        applicationId = "com.thecompany.consultme"
+        applicationId = "com.tarek.wallet"
         versionCode = 1
         versionName = "1.0"
 

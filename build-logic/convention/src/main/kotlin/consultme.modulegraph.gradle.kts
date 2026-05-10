@@ -1,5 +1,5 @@
 // Copyright 2025 MyCompany
-import com.thecompany.consultme.buildlogic.ModuleGraphTask
+import com.tarek.wallet.buildlogic.ModuleGraphTask
 import org.gradle.api.artifacts.ProjectDependency
 
 // Configurations whose declared `project(...)` deps belong on the graph.
