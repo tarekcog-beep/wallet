@@ -1,0 +1,257 @@
+# ConsultMe
+
+[![Android CI](https://github.com/Tarek-Bohdima/ConsultMe/actions/workflows/android_ci.yml/badge.svg)](https://github.com/Tarek-Bohdima/ConsultMe/actions/workflows/android_ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Platform](https://img.shields.io/badge/platform-android-green.svg)
+![Min API](https://img.shields.io/badge/Min%20API-26-purple)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+
+
+[![GitHub stars](https://img.shields.io/github/stars/Tarek-Bohdima/ConsultMe)](https://github.com/Tarek-Bohdima/ConsultMe/stargazers) [![GitHub forks](https://img.shields.io/github/forks/Tarek-Bohdima/ConsultMe)](https://github.com/Tarek-Bohdima/ConsultMe/network)
+
+**ConsultMe** is a template project for Jetpack Compose applications, featuring integrated tools for code quality and automation. It includes:
+
+- **Spotless + ktlint:** Automated code formatting and license-header enforcement
+- **Android Lint:** Kotlin and Compose correctness checks (release variant, fail-on-error)
+- **Kover:** Aggregated test coverage with HTML + XML reports
+- **Module-graph generation:** `./gradlew moduleGraph` keeps `docs/MODULE_GRAPH.md` in sync with the module dep tree
+- **Baseline profile pipeline:** `:baselineprofile` macrobenchmark module generates a startup profile shipped with the release APK (~15–30% cold-start win)
+
+## Features
+
+- Fully configured for Jetpack Compose and a multi-module architecture.
+- Code quality tools included and pre-configured.
+- 100% Kotlin codebase, using Coroutines and Flow.
+- Dependency injection with Hilt.
+
+## Getting Started
+
+Do not clone this repository directly. The recommended way to use this template is to create your own repository from it.
+
+1.  Click the **Use this template** button on the main repository page and select **Create a new repository**.
+2.  Give your new project a name and description. This creates a completely new and independent repository.
+3.  Clone your new repository to your local machine and open it in Android Studio.
+4.  Follow the instructions in the **"How to Rename and Refactor"** section below to customize it for your project.
+
+> **Note on Forking:** If your intention is to contribute changes back to this template, you should fork the repository instead.
+
+## How to Rename and Refactor
+
+There are two equivalent paths — pick whichever fits your workflow. Both run the same `scripts/rename-template.py` under the hood, so they produce the same result.
+
+### Option A: One click in the GitHub UI
+
+After creating your new repo via **Use this template**, a one-shot helper sits in your Actions tab:
+
+1. Open your new repo on GitHub.
+2. Go to **Actions → Bootstrap from template → Run workflow**.
+3. Fill in **package** (e.g. `com.acme.myapp`) and **app name** (e.g. `My App`) and click **Run workflow**.
+
+The workflow runs the rename script with your inputs, commits the result directly to your default branch, and self-deletes itself in the same commit so it doesn't keep haunting your Actions tab. If your repo has branch protection on the default branch, the push will be rejected — use Option B instead, or temporarily relax protection.
+
+### Option B: Locally with Python
+
+If you'd rather rename offline, run the same script on your machine:
+
+```bash
+python3 scripts/rename-template.py com.acme.myapp "My App Name"
+```
+
+The first argument is the new package (also used as `applicationId`). The second is the user-facing app name; its PascalCase form (`MyAppName`) becomes `rootProject.name`, the theme name, and the `Application` class name. The four convention plugin IDs under `build-logic/` are also rewritten (`consultme.android.*` → `myappname.android.*`). Re-running with the same arguments is a no-op.
+
+The script also scrubs three template-maintainer-personal files so they don't carry the upstream owner's identity into your repo: `.github/FUNDING.yml` is deleted, the `reviewers`/`assignees` blocks in `.github/dependabot.yml` are stripped, and `.github/ISSUE_TEMPLATE/config.yml` is rewritten to a commented `contact_links` stub. Re-add your own once your fork has a public URL.
+
+### Post-bootstrap steps (both options)
+
+1. **License header company name:** open `gradle.properties` and set `template.company` (consumed by the root `build.gradle.kts` Spotless config). Then run `./gradlew spotlessApply` to rewrite every header.
+2. **License file:** open `LICENSE.md` and replace `[year]` and the placeholder name with your own.
+3. **README and docs:** update the badges (CI, stars, forks) to point at your repo, and replace the project description in this file. The script intentionally skips `*.md` so it doesn't break upstream-template links.
+4. **Feature module:** replace the placeholder content in `:feature-example` (start with `ExampleScreen.kt`), and rename the module (`:feature-example` → `:feature-yourname`) once you know what you're building.
+
+If you'd rather rename by hand, expand the manual fallback below.
+
+<details>
+<summary>Manual rename fallback</summary>
+
+Use Android Studio's **Refactor > Rename** for the package step.
+
+1. **Project name:** in `settings.gradle.kts`, change `rootProject.name`.
+2. **Application ID & namespaces:** in `app/build.gradle.kts` and every library module's `build.gradle.kts`, change `namespace` (and `applicationId` in `:app`) from `com.thecompany.consultme` to your new ID.
+3. **Package name:** rename the `com.thecompany.consultme` package via Android Studio refactor — that handles source file moves, package declarations, and imports.
+4. **Theme + application class:** rename `ConsultMeTheme`, `Theme.ConsultMe` (in `app/src/main/res/values/themes.xml`), and `ConsultMeApplication` (class + filename + `AndroidManifest.xml` reference) to match your new project name.
+5. **App display name:** in `app/src/main/res/values/strings.xml`, change `app_name`.
+6. **Convention plugin IDs:** rename the four files under `build-logic/convention/src/main/kotlin/consultme.android.*.gradle.kts` and update every `id("consultme.android.*")` reference in module build scripts.
+7. **Maintainer-personal files** (Options A and B do this for you; manual renamers need to do it explicitly):
+    - Delete `.github/FUNDING.yml`.
+    - Strip the `reviewers`/`assignees` blocks from `.github/dependabot.yml`.
+    - Replace the `contact_links` URLs in `.github/ISSUE_TEMPLATE/config.yml` with your own (or delete them).
+8. Then continue with the post-bootstrap steps above.
+
+</details>
+
+## How to add a new feature module
+
+The `consultme.android.feature` convention plugin makes a new feature module a one-liner. Create `feature-<name>/build.gradle.kts`:
+
+```kotlin
+plugins {
+    id("consultme.android.feature")
+}
+
+android {
+    namespace = "com.thecompany.consultme.feature.<name>"
+}
+```
+
+Add `include(":feature-<name>")` to `settings.gradle.kts` and depend on it from `:app` via `implementation(projects.feature<NameInPascalCase>)`. The `feature` convention composes `library + compose + hilt` and pulls in the standard feature deps: lifecycle-runtime-compose, lifecycle-viewmodel-compose, hilt-navigation-compose, `:core-designsystem`, `:core-ui`, and `:core-testing` for unit + instrumented tests.
+
+### Module layout
+
+The template ships these modules (NIA-aligned):
+
+- `:app` — application module, Compose root + nav.
+- `:feature-example` — placeholder feature module; replace with your own and rename.
+- `:core-designsystem` — Compose theme (`ConsultMeTheme`), color/typography tokens.
+- `:core-ui` — shared Compose composables (loading/empty/error states). Scaffold.
+- `:core-model` — pure-Kotlin data classes (no Android). Scaffold.
+- `:core-common` — pure-Kotlin shared utilities; ships the `Dispatcher` qualifier + `AppDispatchers` enum.
+- `:core-domain` — pure-Kotlin use-cases; depends on `:core-model`. Scaffold.
+- `:core-data` — repository layer.
+- `:core-database` — Room database (uses `consultme.android.room`).
+- `:core-testing` — re-exports JUnit/Truth/Turbine/MockK/Hilt-testing/Espresso via `api(...)`, plus `HiltTestRunner`.
+- `:baselineprofile` — macrobenchmark + baseline-profile generator that ships the profile with `:app`'s release APK. See `docs/MODULE_GRAPH.md` for the producer→consumer wiring.
+
+### Other available convention plugins
+
+- `consultme.android.application` — the `:app` module.
+- `consultme.android.library` — generic Android library (no Compose).
+- `consultme.android.compose` — adds Compose BOM, ui/material3 deps, enables `buildFeatures.compose`.
+- `consultme.android.hilt` — Hilt + KSP wiring.
+- `consultme.android.feature` — `library + compose + hilt + standard feature deps + :core-testing`.
+- `consultme.android.room` — KSP + Room runtime/ktx/compiler + schema export dir.
+- `consultme.android.test` — `com.android.test`, for benchmark/macrobenchmark modules.
+- `consultme.android.baselineprofile` — `consultme.android.test` + `androidx.baselineprofile` + macro/uiautomator deps; used by `:baselineprofile`.
+- `consultme.android.lint` — pure-Kotlin module that contributes custom Lint checks.
+- `consultme.jvm.library` — pure-Kotlin module (no AGP), e.g. for `:core-model` / `:core-domain`.
+- `consultme.kover` — coverage instrumentation (auto-applied by every Android/JVM convention; opt out by removing the line).
+- `consultme.modulegraph` — root-only; registers `:moduleGraph` to emit `docs/MODULE_GRAPH.md`.
+
+## How to write a Hilt-aware test
+
+Every module declares `:core-testing` for both unit and instrumented tests, so JUnit/Turbine/MockK/Hilt-testing/Espresso are already on the classpath:
+
+```kotlin
+testImplementation(projects.coreTesting)
+androidTestImplementation(projects.coreTesting)
+```
+
+For an instrumented test that needs Hilt injection, annotate with `@HiltAndroidTest` and use the runner that the convention plugins already wire in (`com.thecompany.consultme.core.testing.HiltTestRunner`):
+
+```kotlin
+@HiltAndroidTest
+class MyFeatureTest {
+    @get:Rule val hilt = HiltAndroidRule(this)
+
+    @Before fun setUp() { hilt.inject() }
+
+    @Test fun feature_does_something() { /* ... */ }
+}
+```
+
+No need to redeclare JUnit/Hilt-testing dependencies in the module's `build.gradle.kts` — `:core-testing` re-exports them with `api(...)`.
+
+## How to regenerate lint baselines
+
+Each module ships its own `lint-baseline.xml`. Regenerate after adding code that introduces new lint warnings (rather than hand-editing):
+
+```bash
+./gradlew :feature-example:updateLintBaseline
+```
+
+Replace `:feature-example` with the module you're updating. CI runs `lintRelease` and fails on any non-baselined violation.
+
+## Code Quality
+
+- **Spotless + ktlint**: Consistent formatting and license-header enforcement on every `.kt` / `.gradle.kts` file.
+- **Android Lint**: Kotlin and Compose correctness checks; CI runs `lintRelease` and fails on any non-baselined violation.
+- **Kover**: Aggregated test coverage. `./gradlew koverHtmlReport` produces a project-wide report under `build/reports/kover/html/`. Generated Hilt/Room/Compose code is excluded from instrumentation in `consultme.kover.gradle.kts`.
+- **Module graph**: `docs/MODULE_GRAPH.md` is regenerated by `./gradlew moduleGraph`. The renderer is pluggable (Strategy pattern via `ModuleGraphRenderer`); ships with a Mermaid implementation. CI fails if the committed graph is stale.
+- **Baseline profile**: `:baselineprofile` is a producer macrobenchmark module that emits `app/src/main/baseline-prof.txt`. The committed profile is consumed by `androidx.profileinstaller` at install time and gives a measurable cold-start win. Regenerate via `./gradlew :app:generateReleaseBaselineProfile` (uses the existing `pixel6api30` GMD).
+
+## Common commands
+
+The same gates CI runs. Run locally before opening a PR:
+
+```bash
+./gradlew spotlessApply spotlessCheck   # license header + ktlint
+./gradlew test                          # unit tests
+./gradlew lintRelease                   # Android Lint, release variant
+./gradlew :app:assembleRelease          # exercises R8 + resource shrinking
+./gradlew koverHtmlReport               # aggregated coverage at build/reports/kover/html/
+./gradlew moduleGraph                   # regenerate docs/MODULE_GRAPH.md (CI fails if stale)
+./gradlew connectedAndroidTest          # instrumented tests (needs device/emulator)
+./gradlew :app:generateReleaseBaselineProfile  # regenerate baseline profile (uses GMD)
+```
+
+Targeted variants:
+
+```bash
+./gradlew :feature-example:testDebugUnitTest --tests "*ExampleViewModelTest"
+./gradlew :feature-example:updateLintBaseline       # regen one module's lint baseline
+./gradlew pixel6api30DebugAndroidTest               # GMD instrumented tests (no physical device)
+```
+
+## Maintaining your fork
+
+After bootstrap (rename script + customizing `:feature-example`), the ongoing maintenance shape is:
+
+- **Dependabot runs weekly.** Grouped PRs bump AndroidX, Kotlin/coroutines, Compose, Gradle plugins, and testing libs (groups defined in [`.github/dependabot.yml`](.github/dependabot.yml)). Skim the upstream changelog, then squash-merge.
+- **Branch protection.** `main` is protected — every change goes through a PR; `build_and_test` is a required check. PR conventions (Conventional Commits, one scope per PR) live in [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- **Module graph stays in sync with code.** Whenever you add or remove an inter-module dependency, regenerate and commit:
+
+  ```bash
+  ./gradlew moduleGraph
+  git add docs/MODULE_GRAPH.md && git commit
+  ```
+
+  CI fails if the committed graph drifts from what's in the build files.
+
+- **Lint baselines.** When new Lint warnings appear (a dependency bump, new code, …), regenerate the affected module's baseline rather than hand-editing the XML:
+
+  ```bash
+  ./gradlew :<module>:updateLintBaseline
+  ```
+
+- **Baseline profile** (cold-start AOT). Regenerate periodically or after notable UI changes. Uses the bundled `pixel6api30` Gradle Managed Device:
+
+  ```bash
+  ./gradlew :app:generateReleaseBaselineProfile
+  git add app/src/main/baseline-prof.txt && git commit
+  ```
+
+- **Major migrations** (AGP, Kotlin, Hilt) ship as **dedicated PRs**, never passive Dependabot bumps. The pinned versions in [`.github/dependabot.yml`](.github/dependabot.yml) reflect what's currently deferred; the migration playbook lives in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md). For AGP majors specifically, install Google's [`agp-9-upgrade`](https://github.com/android/skills) Claude Code skill — it's the canonical playbook.
+- **Release tags.** Cut a tag at each phase boundary, not arbitrarily. Pre-release suffixes (`vX.0.0-rc.N`) for major-migration deferreds so adopters can preview before promotion. Each tag ships as a GitHub Release with auto-generated notes; see [`CLAUDE.md`](CLAUDE.md#versioning-and-tags) for the full policy.
+
+## Versioning
+
+Tags follow SemVer with a template-adopter lens: **MAJOR** = breaking change for downstream forks (`minSdk` bump, AGP/Kotlin major migration, convention-plugin API rename), **MINOR** = a phase landing or new opt-in tooling, **PATCH** = bug fixes and dep bumps. Tags align with phase boundaries in [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md), and every tag ships as a GitHub Release. See [`CLAUDE.md`](CLAUDE.md#versioning-and-tags) for the full policy.
+
+## Project documentation
+
+| File | What's in it |
+|---|---|
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Layered module diagram, UDF data-flow sequence, module responsibilities table, navigation/dispatcher conventions. Read this first if you're orienting in the codebase. |
+| [`CLAUDE.md`](CLAUDE.md) | Orientation for AI coding assistants and humans — common commands, module graph, conventions, CI / branch protection, versioning policy. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Local setup, the local CI loop, PR conventions, license header, where things live, bug/security reporting paths. |
+| [`docs/IMPROVEMENT_PLAN.md`](docs/IMPROVEMENT_PLAN.md) | Living roadmap. Every phase has state, scope, rationale, and concrete deltas. Read before non-trivial work. |
+| [`docs/MODULE_GRAPH.md`](docs/MODULE_GRAPH.md) | Auto-generated Mermaid graph of inter-module dependencies. |
+| [`SECURITY.md`](SECURITY.md) | Security disclosure policy. |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Contributor Covenant v2.1. |
+
+## Template origin
+
+Scaffolded from [`Tarek-Bohdima/ConsultMe`](https://github.com/Tarek-Bohdima/ConsultMe) — a Compose multi-module Android template. The upstream tracks plumbing improvements (convention plugins, build infrastructure, dependency migrations, baseline-profile and module-graph tooling) independent of any one fork's product code. If you scaffolded from it, the upstream [Releases](https://github.com/Tarek-Bohdima/ConsultMe/releases) page and [`docs/IMPROVEMENT_PLAN.md`](https://github.com/Tarek-Bohdima/ConsultMe/blob/main/docs/IMPROVEMENT_PLAN.md) are where new tooling and migration playbooks land. The bootstrap script (`scripts/rename-template.py`) skips `.md` files, so this notice survives renames.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.

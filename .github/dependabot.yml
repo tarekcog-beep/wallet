@@ -1,0 +1,73 @@
+version: 2
+updates:
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "Tarek-Bohdima"
+    assignees:
+      - "Tarek-Bohdima"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+
+    # All Phase 9 ignore entries (AGP semver-major + Hilt 2.59+) lifted in
+    # the Phase 9 PR. Dependabot is now free to bump these along with the
+    # rest of the gradle-and-plugins group.
+    # Group related dependency updates into single pull requests
+    groups:
+      # Group all Gradle and build plugin updates
+      gradle-and-plugins:
+        patterns:
+          - "com.android.application"
+          - "com.android.library"
+          - "com.google.devtools.ksp"
+          - "com.google.dagger.hilt.android"
+          - "com.diffplug.spotless"
+          - "org.jetbrains.kotlinx.kover"
+
+      # Group all AndroidX updates
+      androidx:
+        patterns:
+          - "androidx.*"
+          - "com.google.android.material:material"
+
+      # Group all Jetpack Compose updates
+      jetpack-compose:
+        patterns:
+          - "androidx.compose.*"
+
+      # Group all Kotlin and Coroutines updates
+      kotlin-and-coroutines:
+        patterns:
+          - "org.jetbrains.kotlin.*"
+          - "org.jetbrains.kotlinx.*"
+
+      # Group common testing libraries
+      testing-libs:
+        patterns:
+          - "junit:junit"
+          - "androidx.test.*"
+          - "org.mockito.*"
+          - "app.cash.turbine:turbine"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "Tarek-Bohdima"
+    assignees:
+      - "Tarek-Bohdima"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    # Bundle all action SHA bumps into a single weekly PR so the workflow gets
+    # reviewed atomically rather than five PRs each touching one line.
+    groups:
+      github-actions:
+        patterns:
+          - "*"
